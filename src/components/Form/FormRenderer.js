@@ -59,18 +59,17 @@ const FormRenderer = ({ fields, handleRemoveField, resetFields }) => {
 
                     <Form.Item
                         key={field.key} label={field.label} name={field.name}
-                        rules={[{ required: field.required, message: `${field.label} is required` }]} s
+                        rules={[{ required: field.required, message: `${field.label} is required` }]}
+                        {...(field.type === 'checkbox' ? { valuePropName: 'checked' } : {})}
                     >
-                        <div >
-                            {renderField(field)}
-                            <Button
-                                type="link"
-                                icon={<CloseOutlined />}
-                                style={{ float: "right", marginTop: "5px", color: 'red' }}
-                                onClick={() => handleRemoveField(field.key)}
-                            />
-                        </div>
+                        {renderField(field)}
                     </Form.Item>
+                    <Button
+                        type="link"
+                        icon={<CloseOutlined />}
+                        style={{ float: "right", marginTop: "5px", color: 'red' }}
+                        onClick={() => handleRemoveField(field.key)}
+                    />
                 </>
 
             );
@@ -81,7 +80,7 @@ const FormRenderer = ({ fields, handleRemoveField, resetFields }) => {
             .validateFields()
             .then((values) => {
                 console.log('Form data:', values);
-
+                setFormData(values);
                 form.resetFields();
                 setModal(true);
                 // resetFields();
@@ -96,7 +95,7 @@ const FormRenderer = ({ fields, handleRemoveField, resetFields }) => {
                 <Form form={form} layout="vertical" onFinish={handleSubmit}
                 >
                     {renderFields(fields)}
-                    <Button type="primary" onClick={handleSubmit}>Submit</Button>
+                    <Button type="primary" onClick={handleSubmit} style={{ marginTop: "50px" }}>Submit</Button>
                 </Form>
             </Card>
             <Modal
@@ -106,7 +105,7 @@ const FormRenderer = ({ fields, handleRemoveField, resetFields }) => {
                         OK
                     </Button>,
                 ]}>
-                <pre>{JSON.stringify(fields, null, 2)}</pre>
+                <pre>{JSON.stringify(formData, null, 2)}</pre>
             </Modal>
         </>
     )
